@@ -1,18 +1,18 @@
 import customtkinter as ctk    # customtkinter      5.2.2  
 import tkinter                 # tkinter            0.1.0
-from tkinter import ttk
 import os
 import openai                  # openai             0.28.0 
 from PIL import Image, ImageTk # pillow             10.2.0
 import requests, io            # requests           2.31.0
 """
-(image we’re promoting), (5 description keywords or phrases), 
-(camera model and lens), (lighting), 
-(style of photograph), 
+(image we’re promoting), 
+(5 description keywords or phrases), 
+(camera model and lens), 
+(lighting), 
+(style of photograph)
 """
 
-
-def generate():
+def openai():
     # Attempt to get the OPENAI_API_KEY from environment variables
     api_key = os.getenv("OPENAI_API_KEY")
     # Check if the API key was successfully retrieved
@@ -29,8 +29,7 @@ def generate():
     # user prompt
     response = openai.Image.create(
         prompt=user_prompt,
-        n=int(number_slider.get()),
-        # size 512x512
+        n=int(1),
         size="512x512"
     )
 
@@ -54,17 +53,13 @@ def generate():
 
     update_image()
 
-#def change_appearance_mode_event(new_appearance_mode: str):
-#    ctk.set_appearance_mode(new_appearance_mode)
-    
 if __name__ == '__main__': 
     window = ctk.CTk()    
     window.title("AI Image Drawing Tool")
     window.iconbitmap('image/Gartoon-python.ico')
     
-    #appearance_mode_optionemenu = ctk.CTkOptionMenu(values=["Light", "Dark", "System"],command=change_appearance_mode_event)
     ctk.set_appearance_mode("dark")
-
+    
     input_frame = ctk.CTkFrame(window)
     input_frame.pack(side="left", expand=True, padx=20, pady=20)
 
@@ -129,24 +124,18 @@ if __name__ == '__main__':
     prompt_entry.grid(row=10,column=1, padx=10, pady=10)
     
     """
-    style_label_10 = ttk.Label(master=window, text='label')
-    
-    #CTkButton
-    exercise_button = ctk.CTkButton(master=window, text='The button', command=button_func)
-    exercise_button.pack()
-    
     number_label = ctk.CTkLabel(input_frame, text="# Images")
     number_label.grid(row=11,column=0)
     number_slider = ctk.CTkSlider(input_frame, from_=1, to=2, number_of_steps=3)
     number_slider.grid(row=11,column=1)
-    """
+    
     number_label = ctk.CTkLabel(input_frame, text="Images")
     number_label.grid(row=11,column=0)
     number_slider = ctk.CTkToplevel(input_frame)
     number_slider.grid(row=11,column=1)
-
-    generate_button = ctk.CTkButton(input_frame, text="Generate", command=generate)
-    generate_button.grid(row=12, column=0, columnspan=2, sticky="news", padx=10, pady=10)
+    """
+    generate_button = ctk.CTkButton(input_frame, text="OpenAI", command=openai)
+    generate_button.grid(row=11, column=0, columnspan=2, sticky="news", padx=10, pady=10)
 
     canvas = tkinter.Canvas(window, width=512, height=512)
     canvas.pack(side="left")
