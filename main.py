@@ -1,18 +1,18 @@
 import customtkinter as ctk    # customtkinter      5.2.2  
-import tkinter                 # tkinter            0.1.0
+import tkinter                 # tk                 0.1.0
+from tkinter import ttk
 import os
 import openai                  # openai             0.28.0 
 from PIL import Image, ImageTk # pillow             10.2.0
 import requests, io            # requests           2.31.0
 """
-(image we’re promoting), 
+(image we’re promoting),
 (5 description keywords or phrases), 
 (camera model and lens), 
 (lighting), 
 (style of photograph)
 """
-
-def openai():
+def gen_openai():
     # Attempt to get the OPENAI_API_KEY from environment variables
     api_key = os.getenv("OPENAI_API_KEY")
     # Check if the API key was successfully retrieved
@@ -23,13 +23,16 @@ def openai():
         openai.api_key = api_key
         print("OPENAI_API_KEY found and set successfully!")
     
+    model = "dall-e-2" #dall-e-3
     user_prompt = prompt_entry.get("0.0", tkinter.END)
     # style_dropdown_1-9
     user_prompt += "in style: "+ style_dropdown_1.get()+ style_dropdown_2.get()+ style_dropdown_3.get()+ style_dropdown_4.get()+ style_dropdown_5.get()+ style_dropdown_6.get()+ style_dropdown_7.get()+ style_dropdown_8.get()+ style_dropdown_9.get()
     # user prompt
     response = openai.Image.create(
-        prompt=user_prompt,
-        n=int(1),
+        model=model,
+        prompt=user_prompt, 
+        n=1,
+        # size 512x512
         size="512x512"
     )
 
@@ -57,9 +60,9 @@ if __name__ == '__main__':
     window = ctk.CTk()    
     window.title("AI Image Drawing Tool")
     window.iconbitmap('image/Gartoon-python.ico')
-    
-    ctk.set_appearance_mode("dark")
-    
+
+    ctk.set_appearance_mode("light")# dark | Light | System
+
     input_frame = ctk.CTkFrame(window)
     input_frame.pack(side="left", expand=True, padx=20, pady=20)
 
@@ -122,22 +125,11 @@ if __name__ == '__main__':
     prompt_label.grid(row=10,column=0, padx=10, pady=10)
     prompt_entry = ctk.CTkTextbox(input_frame, height=10)
     prompt_entry.grid(row=10,column=1, padx=10, pady=10)
-    
-    """
-    number_label = ctk.CTkLabel(input_frame, text="# Images")
-    number_label.grid(row=11,column=0)
-    number_slider = ctk.CTkSlider(input_frame, from_=1, to=2, number_of_steps=3)
-    number_slider.grid(row=11,column=1)
-    
-    number_label = ctk.CTkLabel(input_frame, text="Images")
-    number_label.grid(row=11,column=0)
-    number_slider = ctk.CTkToplevel(input_frame)
-    number_slider.grid(row=11,column=1)
-    """
-    generate_button = ctk.CTkButton(input_frame, text="OpenAI", command=openai)
+
+    generate_button = ctk.CTkButton(input_frame, text="OpenAI", command=gen_openai)
     generate_button.grid(row=11, column=0, columnspan=2, sticky="news", padx=10, pady=10)
 
     canvas = tkinter.Canvas(window, width=512, height=512)
     canvas.pack(side="left")
     #mail()  #window()  #app()  #root()  =Add()
-    window.mainloop()    
+    window.mainloop() 
